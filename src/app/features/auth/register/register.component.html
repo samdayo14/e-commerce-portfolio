@@ -1,0 +1,80 @@
+<div
+  class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50"
+>
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <h2
+      class="mt-6 text-center text-3xl font-bold tracking-tight text-slate-900 uppercase font-sans"
+    >
+      Join LuxeStore
+    </h2>
+    <p class="mt-2 text-center text-sm text-gray-600">
+      Create an account to track orders and checkout faster
+    </p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <form
+        [formGroup]="registerForm"
+        (ngSubmit)="onSubmit()"
+        class="space-y-6"
+      >
+        <div class="flex flex-col gap-4">
+          <app-input
+            id="name"
+            label="Full Name"
+            type="text"
+            placeholder="John Doe"
+            [control]="f.name"
+          ></app-input>
+
+          <app-input
+            id="email"
+            label="Email address"
+            type="email"
+            placeholder="name@example.com"
+            [control]="f.email"
+          ></app-input>
+
+          <app-input
+            id="password"
+            label="Password"
+            type="password"
+            placeholder="Create a password"
+            [control]="f.password"
+          ></app-input>
+
+          <app-button
+            type="submit"
+            [fullWidth]="true"
+            [disabled]="registerForm.invalid"
+          >
+            Create Account
+          </app-button>
+        </div>
+      </form>
+
+      <div class="mt-6">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="bg-white px-2 text-gray-500"
+              >Already have an account?</span
+            >
+          </div>
+        </div>
+
+        <div class="mt-6 flex justify-center text-sm">
+          <a
+            routerLink="/login"
+            class="font-bold text-slate-900 hover:text-slate-700 underline underline-offset-4 cursor-pointer"
+          >
+            Sign in here
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

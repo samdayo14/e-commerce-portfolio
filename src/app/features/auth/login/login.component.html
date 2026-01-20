@@ -1,0 +1,77 @@
+<div
+  class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50"
+>
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <h2
+      class="mt-6 text-center text-3xl font-bold tracking-tight text-slate-900 uppercase font-sans"
+    >
+      LuxeStore
+    </h2>
+    <p class="mt-2 text-center text-sm text-gray-600">Welcome back</p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="flex flex-col gap-4">
+          <app-input
+            id="email"
+            label="Email address"
+            type="email"
+            placeholder="name@example.com"
+            [control]="f.email"
+          ></app-input>
+
+          <app-input
+            id="password"
+            label="Password"
+            type="password"
+            placeholder="••••••••"
+            [control]="f.password"
+          ></app-input>
+        </div>
+
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center justify-end">
+            <div class="text-sm">
+              <a
+                routerLink="/forgot-password"
+                class="font-medium text-slate-600 hover:text-slate-900"
+              >
+                Forgot your password?
+              </a>
+            </div>
+          </div>
+
+          <app-button
+            type="submit"
+            [fullWidth]="true"
+            [disabled]="loginForm.invalid"
+          >
+            Sign In
+          </app-button>
+        </div>
+      </form>
+
+      <div class="mt-6">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="bg-white px-2 text-gray-500">New to LuxeStore?</span>
+          </div>
+        </div>
+
+        <div class="mt-6 flex justify-center text-sm">
+          <a
+            routerLink="/register"
+            class="font-bold text-slate-900 hover:text-slate-700 underline underline-offset-4 cursor-pointer"
+          >
+            Create an account
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
