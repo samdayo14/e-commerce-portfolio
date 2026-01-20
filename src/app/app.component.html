@@ -71,6 +71,7 @@
 
         <button
           class="group relative text-gray-900 hover:text-slate-600 transition-colors"
+          (click)="isCartOpen = !isCartOpen"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -96,6 +97,10 @@
   </div>
 </nav>
 }
+<app-cart-drawer
+  [isOpen]="isCartOpen"
+  (close)="isCartOpen = false"
+></app-cart-drawer>
 
 <router-outlet></router-outlet>
 @if(showLayout){
