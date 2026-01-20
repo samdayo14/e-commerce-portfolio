@@ -1,0 +1,68 @@
+<div
+  class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8"
+>
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <div
+      class="bg-white py-10 px-6 shadow-xl sm:rounded-lg sm:px-10 text-center"
+    >
+      <div
+        class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6 animate-bounce"
+      >
+        <svg
+          class="h-10 w-10 text-green-600"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          ></path>
+        </svg>
+      </div>
+
+      <h2 class="text-3xl font-bold tracking-tight text-slate-900 font-serif">
+        Order Confirmed!
+      </h2>
+      <p class="mt-2 text-sm text-gray-500">
+        Thank you for shopping with LuxeStore.
+      </p>
+
+      <div class="mt-8 border-t border-b border-gray-200 py-6">
+        <p class="text-sm text-gray-500 mb-2">Order Reference</p>
+        <p class="text-xl font-mono font-bold text-slate-900 tracking-wider">
+          {{ orderId }}
+        </p>
+
+        <div class="mt-6 text-xs text-gray-400">
+          <p>A confirmation email has been sent to:</p>
+          <p class="font-medium text-slate-600 mt-1">{{ email }}</p>
+        </div>
+      </div>
+
+      <div class="mt-6 text-sm text-gray-500 space-y-1">
+        <p>
+          Estimated Delivery:
+          <span class="font-semibold text-slate-900">3-5 Business Days</span>
+        </p>
+      </div>
+
+      <div class="mt-8">
+        <app-button [fullWidth]="true" routerLink="/">
+          Continue Shopping
+        </app-button>
+      </div>
+
+      <div class="mt-6">
+        <a
+          href="#"
+          class="text-xs font-medium text-gray-400 hover:text-slate-900 transition-colors"
+        >
+          Need help with your order?
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

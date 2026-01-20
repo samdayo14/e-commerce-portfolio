@@ -26,7 +26,13 @@ export class AppComponent implements OnInit {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {
-        const hiddenRoutes = ['/login', '/register', '/forgot-password'];
+        const hiddenRoutes = [
+          '/login',
+          '/register',
+          '/forgot-password',
+          'checkout',
+          '/order-success',
+        ];
 
         const isAuthPage = hiddenRoutes.some((route) =>
           event.urlAfterRedirects.includes(route)

@@ -1,0 +1,210 @@
+<div class="min-h-screen bg-white">
+  <div class="lg:grid lg:grid-cols-12 lg:h-full">
+    <div
+      class="lg:col-span-5 bg-gray-50 border-l border-gray-200 order-first lg:order-last"
+    >
+      <div class="px-4 py-8 sm:px-6 lg:px-8 lg:py-16 lg:sticky lg:top-0">
+        <h2 class="sr-only">Order summary</h2>
+
+        <div class="flow-root">
+          <ul role="list" class="-my-6 divide-y divide-gray-200">
+            @for (item of cartItems; track item.title) {
+            <li class="flex py-6 space-x-4">
+              <div
+                class="h-16 w-16 flex-shrink-0 rounded-md border border-gray-200 overflow-hidden relative"
+              >
+                <img
+                  [src]="item.image"
+                  [alt]="item.title"
+                  class="h-full w-full object-cover object-center"
+                />
+                <span
+                  class="absolute top-0 right-0 -mt-2 -mr-2 flex h-5 w-5 items-center justify-center rounded-full bg-gray-500 text-xs font-medium text-white ring-2 ring-white"
+                  >1</span
+                >
+              </div>
+              <div class="flex flex-col flex-1 justify-center">
+                <h3 class="text-sm font-medium text-gray-900">
+                  {{ item.title }}
+                </h3>
+                <p class="text-sm text-gray-500">
+                  {{ item.color }} / {{ item.size }}
+                </p>
+              </div>
+              <p class="text-sm font-medium text-gray-900">
+                {{ item.price | currency }}
+              </p>
+            </li>
+            }
+          </ul>
+        </div>
+
+        <div class="mt-10 border-t border-gray-200 pt-6 space-y-4">
+          <div class="flex justify-between text-sm text-gray-600">
+            <p>Subtotal</p>
+            <p>{{ subtotal | currency }}</p>
+          </div>
+          <div class="flex justify-between text-sm text-gray-600">
+            <p>Shipping</p>
+            <p class="font-medium text-green-600">Free</p>
+          </div>
+          <div class="flex justify-between text-sm text-gray-600">
+            <p>Taxes (estimated)</p>
+            <p>{{ tax | currency }}</p>
+          </div>
+
+          <div
+            class="flex justify-between items-center border-t border-gray-200 pt-6"
+          >
+            <p class="text-base font-medium text-gray-900">Total</p>
+            <p class="text-2xl font-bold text-slate-900">
+              {{ total | currency }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-7 px-4 py-8 sm:px-6 lg:px-8 lg:py-16">
+      <div class="mb-6">
+        <a
+          routerLink="/home"
+          class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-slate-900 transition-colors group"
+        >
+          <svg
+            class="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+            />
+          </svg>
+          Return to Home
+        </a>
+      </div>
+
+      <div class="mb-10">
+        <a
+          routerLink="/"
+          class="text-2xl font-bold tracking-tighter text-slate-900 font-serif"
+          >LuxeStore</a
+        >
+
+        <nav class="flex text-sm font-medium text-gray-500 mt-2">
+          <ol class="flex items-center space-x-2">
+            <li><a routerLink="/cart" class="hover:text-gray-900">Cart</a></li>
+            <li>
+              <svg
+                class="h-4 w-4 text-gray-300"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            </li>
+            <li class="text-slate-900">Checkout</li>
+          </ol>
+        </nav>
+      </div>
+
+      <form
+        [formGroup]="checkoutForm"
+        (ngSubmit)="onSubmit()"
+        class="space-y-8"
+      >
+        <div>
+          <h3 class="text-lg font-medium text-gray-900 mb-4">
+            Contact Information
+          </h3>
+          <app-input
+            label="Email address"
+            type="email"
+            placeholder="guest@example.com"
+            [control]="f.email"
+          ></app-input>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-medium text-gray-900 mb-4">
+            Shipping Address
+          </h3>
+
+          <div class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+            <app-input label="First Name" [control]="f.firstName"></app-input>
+            <app-input label="Last Name" [control]="f.lastName"></app-input>
+
+            <div class="sm:col-span-2">
+              <app-input
+                label="Address"
+                placeholder="123 Main St"
+                [control]="f.address"
+              ></app-input>
+            </div>
+
+            <div class="sm:col-span-2 sm:grid sm:grid-cols-3 sm:gap-x-4">
+              <div><app-input label="City" [control]="f.city"></app-input></div>
+              <div>
+                <app-input label="State" [control]="f.city"></app-input>
+              </div>
+              <div>
+                <app-input label="ZIP / Postal" [control]="f.zip"></app-input>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Payment</h3>
+          <div class="border border-gray-200 rounded-md p-4 bg-gray-50/50 mb-4">
+            <p class="text-sm text-gray-600 mb-4 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M21 4H3a2 2 0 00-2 2v12a2 2 0 002 2h18a2 2 0 002-2V6a2 2 0 00-2-2zM3 6h18v2H3V6zm0 12v-6h18v6H3z"
+                />
+              </svg>
+              Credit Card
+            </p>
+            <div class="grid grid-cols-1 gap-y-4">
+              <app-input
+                label="Card Number"
+                placeholder="0000 0000 0000 0000"
+                [control]="f.cardNumber"
+              ></app-input>
+              <div class="grid grid-cols-2 gap-x-4">
+                <app-input
+                  label="Expiration (MM/YY)"
+                  placeholder="12/26"
+                  [control]="f.expiry"
+                ></app-input>
+                <app-input
+                  label="CVC"
+                  placeholder="123"
+                  [control]="f.cvc"
+                ></app-input>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-gray-200">
+          <app-button
+            type="submit"
+            [fullWidth]="true"
+            [disabled]="checkoutForm.invalid"
+          >
+            Pay {{ total | currency }}
+          </app-button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
