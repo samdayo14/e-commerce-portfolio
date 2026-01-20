@@ -1,0 +1,163 @@
+<div class="bg-white min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start">
+      <div class="lg:col-span-7 flex flex-col gap-6">
+        @for (img of product.images; track img) {
+        <div
+          class="aspect-w-4 aspect-h-3 rounded-lg overflow-hidden bg-gray-100"
+        >
+          <img
+            [src]="img"
+            [alt]="product.title"
+            class="w-full h-full object-cover object-center"
+          />
+        </div>
+        }
+      </div>
+
+      <div
+        class="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0 lg:col-span-5 lg:sticky lg:top-24"
+      >
+        <nav class="flex text-sm text-gray-500 mb-4">
+          <ol class="flex items-center space-x-2">
+            <li><a href="#" class="hover:text-gray-900">Home</a></li>
+            <li>/</li>
+            <li><a href="#" class="hover:text-gray-900">Men's Shoes</a></li>
+          </ol>
+        </nav>
+
+        <h1 class="text-3xl font-bold font-serif tracking-tight text-gray-900">
+          {{ product.title }}
+        </h1>
+        <div class="mt-3 flex justify-between items-end">
+          <p class="text-xl text-gray-900">{{ product.price | currency }}</p>
+
+          <div class="flex items-center">
+            <div class="flex items-center text-yellow-400">
+              @for (star of [1,2,3,4,5]; track star) {
+              <svg
+                class="h-5 w-5 flex-shrink-0"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                />
+              </svg>
+              }
+            </div>
+            <p class="ml-2 text-sm text-gray-500 underline decoration-gray-300">
+              ({{ product.reviews }})
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-8">
+          <h3 class="text-sm font-medium text-gray-900">
+            Color:
+            <span class="text-gray-500 font-normal">{{ selectedColor }}</span>
+          </h3>
+          <div class="mt-4 flex items-center space-x-3">
+            @for (color of product.colors; track color.name) {
+            <button
+              (click)="selectColor(color.name)"
+              [class.ring-2]="selectedColor === color.name"
+              class="relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 ring-slate-900 focus:outline-none"
+            >
+              <span
+                [style.backgroundColor]="color.hex"
+                class="h-8 w-8 rounded-full border border-black border-opacity-10"
+              ></span>
+            </button>
+            }
+          </div>
+        </div>
+
+        <div class="mt-8">
+          <div class="flex justify-between">
+            <h3 class="text-sm font-medium text-gray-900">Select Size</h3>
+            <a href="#" class="text-sm font-medium text-slate-600 underline"
+              >Size Guide</a
+            >
+          </div>
+
+          <div class="mt-4 grid grid-cols-4 gap-3 sm:grid-cols-5">
+            @for (size of product.sizes; track size) {
+            <button
+              (click)="selectSize(size)"
+              [class.bg-slate-900]="selectedSize === size"
+              [class.text-white]="selectedSize === size"
+              [class.border-transparent]="selectedSize === size"
+              [class.bg-white]="selectedSize !== size"
+              [class.text-gray-900]="selectedSize !== size"
+              [class.border-gray-200]="selectedSize !== size"
+              class="flex items-center justify-center rounded border py-3 text-sm font-medium hover:bg-gray-50 hover:border-gray-300 sm:flex-1 cursor-pointer transition-all"
+            >
+              {{ size }}
+            </button>
+            }
+          </div>
+        </div>
+
+        <div class="mt-8">
+          <app-button
+            [fullWidth]="true"
+            (click)="addToCart()"
+            [disabled]="!selectedSize"
+          >
+            @if (selectedSize) { Add to Cart - {{ product.price | currency }}
+            } @else { Select a Size }
+          </app-button>
+
+          <p class="mt-4 text-center text-xs text-gray-500">
+            Free shipping on orders over $75. Free returns.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-[#f8f7f5] border-t border-gray-200 mt-16 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div>
+          <h3
+            class="text-lg font-bold text-gray-900 mb-4 uppercase text-sm tracking-wider"
+          >
+            The Details
+          </h3>
+          <p class="text-gray-600 leading-relaxed text-sm">
+            {{ product.description }}
+          </p>
+        </div>
+
+        <div>
+          <h3
+            class="text-lg font-bold text-gray-900 mb-4 uppercase text-sm tracking-wider"
+          >
+            Materially Better
+          </h3>
+          <ul class="list-disc pl-5 space-y-2 text-sm text-gray-600">
+            <li>Eucalyptus tree fiber upper</li>
+            <li>Sugarcane-based Green EVA midsole</li>
+            <li>Castor bean oil-based insole foam</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3
+            class="text-lg font-bold text-gray-900 mb-4 uppercase text-sm tracking-wider"
+          >
+            Care Guide
+          </h3>
+          <p class="text-gray-600 leading-relaxed text-sm">
+            This shoe is
+            <span class="underline decoration-slate-400">machine washable</span
+            >. Remove the insoles and laces, place shoes in a delicates bag, and
+            wash in cold water. Air dry only.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
