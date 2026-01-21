@@ -8,11 +8,18 @@ import {
 import { FooterComponent } from './shared/components/layout/footer/footer.component';
 import { filter } from 'rxjs/operators';
 import { CartDrawerComponent } from './shared/components/cart-drawer/cart-drawer.component';
+import { ToastComponent } from './shared/components/ui/toast/toast.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, FooterComponent, CartDrawerComponent],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    FooterComponent,
+    CartDrawerComponent,
+    ToastComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

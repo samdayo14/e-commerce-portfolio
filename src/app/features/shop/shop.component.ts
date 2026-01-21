@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { ActivatedRoute } from '@angular/router';
+import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 
 @Component({
   selector: 'app-shop',

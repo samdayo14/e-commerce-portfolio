@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
   selector: 'app-button',
   standalone: true,
-  imports: [], // No CommonModule needed for @if!
+  imports: [SpinnerComponent],
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
 })
@@ -17,7 +18,7 @@ export class ButtonComponent {
   getClasses(): string {
     const base = this.fullWidth ? 'w-full' : '';
     const common =
-      'flex justify-center items-center px-4 py-3 border text-sm font-bold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed';
+      'flex justify-center items-center px-4 py-3 border text-sm font-bold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed';
 
     switch (this.variant) {
       case 'primary':

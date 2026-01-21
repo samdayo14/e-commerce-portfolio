@@ -22,10 +22,18 @@
         <div class="flex flex-col gap-4">
           <app-input
             id="name"
-            label="Full Name"
+            label="First Name"
             type="text"
-            placeholder="John Doe"
-            [control]="f.name"
+            placeholder="John "
+            [control]="f.firstName"
+          ></app-input>
+
+          <app-input
+            id="name"
+            label="Last Name"
+            type="text"
+            placeholder=" Doe"
+            [control]="f.lastName"
           ></app-input>
 
           <app-input
@@ -48,8 +56,9 @@
             type="submit"
             [fullWidth]="true"
             [disabled]="registerForm.invalid"
+            [loading]="(isLoading$ | async) || false"
           >
-            Create Account
+            Sign Up
           </app-button>
         </div>
       </form>
@@ -78,3 +87,8 @@
     </div>
   </div>
 </div>
+@if (error$ | async; as error) {
+<div class="text-red-500 text-sm mt-2 text-center">
+  {{ error }}
+</div>
+}

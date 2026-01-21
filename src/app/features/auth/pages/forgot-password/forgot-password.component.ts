@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   FormControl,
@@ -6,8 +6,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
-import { InputComponent } from '../../../shared/components/ui/input/input.component';
+import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
+import { InputComponent } from '../../../../shared/components/ui/input/input.component';
+import { Store } from '@ngrx/store';
+import * as AuthSelectors from '../../store/auth.selectors';
+import * as AuthActions from '../../store/auth.actions';
 
 @Component({
   selector: 'app-forgot-password',
@@ -17,6 +20,10 @@ import { InputComponent } from '../../../shared/components/ui/input/input.compon
   styleUrl: './forgot-password.component.scss',
 })
 export class ForgotPasswordComponent {
+  private store = inject(Store);
+
+  isLoading$ = this.store.select(AuthSelectors.selectIsLoading);
+  error$ = this.store.select(AuthSelectors.selectAuthError);
   isEmailSent = false;
 
   forgotForm = new FormGroup({
@@ -30,7 +37,8 @@ export class ForgotPasswordComponent {
   onSubmit() {
     if (this.forgotForm.invalid) return;
 
-    console.log('Reset Email Sent to:', this.forgotForm.value.email);
-    this.isEmailSent = true;
+    const email = this.forgotForm.value.email ?? '';
+
+    this.store.dispatch(AuthActions.resetPassword({ email }));
   }
 }
