@@ -13,6 +13,7 @@ import { ToastComponent } from './shared/components/ui/toast/toast.component';
 import { Store } from '@ngrx/store';
 import { LoadingOverlayComponent } from './shared/components/ui/spinner/loading-overlay.component';
 import { AsyncPipe } from '@angular/common';
+import { AuthService } from './features/auth/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -35,8 +36,10 @@ export class AppComponent implements OnInit {
   private store = inject(Store);
 
   isLoading$ = this.store.select(AuthSelectors.selectIsLoading);
+  user$ = this.store.select(AuthSelectors.selectCurrentUser);
+  isLoggedIn$ = this.store.select(AuthSelectors.selectIsLoggedIn);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
     this.router.events
@@ -56,5 +59,10 @@ export class AppComponent implements OnInit {
 
         this.showLayout = !isAuthPage;
       });
+  }
+
+  logout() {
+    this.authService.signOut();
+    this.router.navigate(['/login']);
   }
 }

@@ -74,5 +74,12 @@ export const authReducer = createReducer(
     ...state,
     loading: false,
     error: error,
+  })),
+
+  on(AuthActions.restoreSession, (state, { user }) => ({
+    ...state,
+    user: user,
+    loading: false,
+    error: null,
   }))
 );

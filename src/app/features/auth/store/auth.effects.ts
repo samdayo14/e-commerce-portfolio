@@ -1,12 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as AuthActions from './auth.actions';
-import { catchError, map, exhaustMap, tap } from 'rxjs/operators';
+import { catchError, map, exhaustMap, tap, take } from 'rxjs/operators';
 import { of, from } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { User as FirebaseUser } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { ToastService } from '../../../shared/services/toast.service';
+import { ROOT_EFFECTS_INIT } from '@ngrx/effects';
 @Injectable()
 export class AuthEffects {
   private actions$ = inject(Actions);
@@ -128,5 +129,29 @@ export class AuthEffects {
         })
       ),
     { dispatch: false }
+  );
+
+  init$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ROOT_EFFECTS_INIT),
+      exhaustMap(() =>
+        this.authService.authState$.pipe(
+          take(1),
+          map((firebaseUser) => {
+            if (firebaseUser) {
+              const user = {
+                id: firebaseUser.uid,
+                email: firebaseUser.email || '',
+                token: '',
+                displayName: firebaseUser.displayName || '',
+              };
+              return AuthActions.restoreSession({ user });
+            }
+
+            return { type: 'NO_ACTION' };
+          })
+        )
+      )
+    )
   );
 }

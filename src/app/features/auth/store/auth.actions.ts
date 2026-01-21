@@ -53,3 +53,8 @@ export const resetPasswordFailure = createAction(
   '[Auth] forgot Password failure',
   props<{ error: string }>()
 );
+
+export const restoreSession = createAction(
+  '[Auth] Restore Session',
+  props<{ user: AppUser }>()
+);

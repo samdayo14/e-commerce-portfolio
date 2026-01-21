@@ -40,6 +40,10 @@ export class AuthService {
     await this.auth$.signOut();
   }
 
+  get authState$() {
+    return user(this.auth$);
+  }
+
   public async signUp({
     firstName,
     lastName,

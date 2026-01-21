@@ -49,6 +49,22 @@
       </div>
 
       <div class="flex items-center justify-end flex-1 space-x-6">
+        @if (isLoggedIn$ | async) {
+        <div class="flex items-center gap-4">
+          <span
+            class="hidden md:block text-sm font-serif font-bold text-slate-900"
+          >
+            Hi, {{ (user$ | async)?.displayName?.split(' ')?.[0] }}
+          </span>
+
+          <button
+            (click)="logout()"
+            class="text-xs font-bold text-gray-500 hover:text-red-600 uppercase tracking-widest transition-colors"
+          >
+            Logout
+          </button>
+        </div>
+        } @else {
         <a
           routerLink="/login"
           class="text-gray-900 hover:text-slate-600 transition-colors"
@@ -68,6 +84,7 @@
             />
           </svg>
         </a>
+        }
 
         <button
           class="group relative text-gray-900 hover:text-slate-600 transition-colors"
