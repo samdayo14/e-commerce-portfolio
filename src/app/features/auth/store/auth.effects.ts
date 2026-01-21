@@ -121,7 +121,7 @@ export class AuthEffects {
         ofType(AuthActions.resetPasswordSuccess),
         tap(() => {
           this.toast.show(
-            'Check your Inbox',
+            'Check your Inbox or Spam',
             'We have sent you a link to reset your password.',
             'info'
           );
