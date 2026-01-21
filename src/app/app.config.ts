@@ -14,6 +14,9 @@ import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { authReducer } from './features/auth/store/auth.reducer';
 import { AuthEffects } from './features/auth/store/auth.effects';
+import { productReducer } from './shared/store/product.reducer';
+import { ProductEffects } from './shared/store/product.effects';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,9 +25,11 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
+    provideHttpClient(withFetch()),
     provideStore({
       auth: authReducer,
+      shop: productReducer,
     }),
-    provideEffects([AuthEffects]),
+    provideEffects([AuthEffects, ProductEffects]),
   ],
 };

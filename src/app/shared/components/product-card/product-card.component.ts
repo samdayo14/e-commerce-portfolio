@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './product-card.component.scss',
 })
 export class ProductCardComponent {
-  @Input() id: string = '';
+  @Input() id!: number;
   @Input() title: string = '';
   @Input() price: number = 0;
   @Input() image: string = '';

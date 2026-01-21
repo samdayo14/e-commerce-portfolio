@@ -104,24 +104,35 @@
         New Arrivals
       </h2>
       <a
-        href="#"
+        routerLink="/shop/all"
         class="text-sm font-semibold text-slate-600 hover:text-slate-900 underline underline-offset-4"
         >See All</a
       >
     </div>
 
+    @if (isLoading$ | async) {
+    <div class="flex gap-4 overflow-hidden">
+      @for (i of [1,2,3,4]; track i) {
+      <div
+        class="min-w-[280px] h-[350px] bg-gray-100 animate-pulse rounded-md"
+      ></div>
+      }
+    </div>
+    } @else {
     <div class="flex gap-6 overflow-x-auto pb-8 snap-x scrollbar-hide">
-      @for (product of featuredProducts; track product.id) {
+      @for (product of products$ | async; track product.id) {
       <div class="min-w-[280px] snap-start">
         <app-product-card
           [id]="product.id"
           [title]="product.title"
           [price]="product.price"
           [category]="product.category"
-          [image]="product.image"
+          [image]="product.thumbnail"
         ></app-product-card>
       </div>
       }
     </div>
+    }
   </div>
 </div>
+<!-- </div> -->
