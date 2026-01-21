@@ -7,19 +7,31 @@ import { ShopComponent } from './features/shop/shop.component';
 import { CheckoutComponent } from './features/checkout/checkout.component';
 import { OrderSuccessComponent } from './features/checkout/order-success/order-success.component';
 import { ForgotPasswordComponent } from './features/auth/pages/forgot-password/forgot-password.component';
+import { authGuard } from './core/guards/auth.guards';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+
+  // Public Routes
   { path: 'home', component: HomeComponent },
   { path: 'products/:id', component: ProductDetailComponent },
   { path: 'shop/:category', component: ShopComponent },
-  { path: 'checkout', component: CheckoutComponent },
-  { path: 'order-success', component: OrderSuccessComponent },
 
-  //   Auth Routes
+  {
+    path: 'checkout',
+    component: CheckoutComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'order-success',
+    component: OrderSuccessComponent,
+    canActivate: [authGuard],
+  },
+
+  // Auth Routes
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
 
-  { path: '**', redirectTo: 'login' },
+  { path: '**', redirectTo: 'home' },
 ];

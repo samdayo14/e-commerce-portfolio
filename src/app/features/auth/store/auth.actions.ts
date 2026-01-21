@@ -58,3 +58,5 @@ export const restoreSession = createAction(
   '[Auth] Restore Session',
   props<{ user: AppUser }>()
 );
+
+export const authCheckComplete = createAction('[Auth] Check Complete');

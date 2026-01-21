@@ -148,7 +148,7 @@ export class AuthEffects {
               return AuthActions.restoreSession({ user });
             }
 
-            return { type: 'NO_ACTION' };
+            return AuthActions.authCheckComplete();
           })
         )
       )

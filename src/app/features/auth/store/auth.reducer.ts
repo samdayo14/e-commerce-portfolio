@@ -7,6 +7,7 @@ export interface AuthState {
   loading: boolean;
   error: string | null;
   message: string | null;
+  authChecked: boolean;
 }
 
 export const initialState: AuthState = {
@@ -14,6 +15,7 @@ export const initialState: AuthState = {
   loading: false,
   error: null,
   message: null,
+  authChecked: false,
 };
 
 export const authReducer = createReducer(
@@ -81,5 +83,11 @@ export const authReducer = createReducer(
     user: user,
     loading: false,
     error: null,
+    authChecked: true,
+  })),
+
+  on(AuthActions.authCheckComplete, (state) => ({
+    ...state,
+    authChecked: true,
   }))
 );
