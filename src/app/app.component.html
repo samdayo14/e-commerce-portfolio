@@ -103,6 +103,9 @@
 ></app-cart-drawer>
 
 <app-toast></app-toast>
+@if (isLoading$ | async) {
+<app-loading-overlay></app-loading-overlay>
+}
 <router-outlet></router-outlet>
 @if(showLayout){
 

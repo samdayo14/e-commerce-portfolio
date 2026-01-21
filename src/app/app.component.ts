@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   RouterOutlet,
   RouterLink,
@@ -7,8 +7,12 @@ import {
 } from '@angular/router';
 import { FooterComponent } from './shared/components/layout/footer/footer.component';
 import { filter } from 'rxjs/operators';
+import * as AuthSelectors from './features/auth/store/auth.selectors';
 import { CartDrawerComponent } from './shared/components/cart-drawer/cart-drawer.component';
 import { ToastComponent } from './shared/components/ui/toast/toast.component';
+import { Store } from '@ngrx/store';
+import { LoadingOverlayComponent } from './shared/components/ui/spinner/loading-overlay.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +23,8 @@ import { ToastComponent } from './shared/components/ui/toast/toast.component';
     FooterComponent,
     CartDrawerComponent,
     ToastComponent,
+    LoadingOverlayComponent,
+    AsyncPipe,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -26,6 +32,9 @@ import { ToastComponent } from './shared/components/ui/toast/toast.component';
 export class AppComponent implements OnInit {
   showLayout = true;
   isCartOpen = false;
+  private store = inject(Store);
+
+  isLoading$ = this.store.select(AuthSelectors.selectIsLoading);
 
   constructor(private router: Router) {}
 
