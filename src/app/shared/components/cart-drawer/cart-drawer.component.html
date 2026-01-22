@@ -1,6 +1,5 @@
 <div
-  class="relative z-[60]"
-  [class.pointer-events-none]="!isOpen"
+  class="relative z-[100]"
   aria-labelledby="slide-over-title"
   role="dialog"
   aria-modal="true"
@@ -9,10 +8,14 @@
     class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity duration-500 ease-in-out"
     [class.opacity-0]="!isOpen"
     [class.opacity-100]="isOpen"
+    [class.pointer-events-none]="!isOpen"
     (click)="close.emit()"
   ></div>
 
-  <div class="fixed inset-0 overflow-hidden">
+  <div
+    class="fixed inset-0 overflow-hidden"
+    [class.pointer-events-none]="!isOpen"
+  >
     <div class="absolute inset-0 overflow-hidden">
       <div
         class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10"
@@ -39,7 +42,6 @@
                     type="button"
                     class="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
                   >
-                    <span class="absolute -inset-0.5"></span>
                     <span class="sr-only">Close panel</span>
                     <svg
                       class="h-6 w-6"
@@ -47,7 +49,6 @@
                       viewBox="0 0 24 24"
                       stroke-width="1.5"
                       stroke="currentColor"
-                      aria-hidden="true"
                     >
                       <path
                         stroke-linecap="round"
@@ -65,12 +66,13 @@
                     @for (item of cartItems; track item.id) {
                     <li class="flex py-6">
                       <div
-                        class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
+                        class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 cursor-pointer group"
+                        (click)="openQuickView(item)"
                       >
                         <img
                           [src]="item.image"
                           [alt]="item.title"
-                          class="h-full w-full object-cover object-center"
+                          class="h-full w-full object-cover object-center group-hover:opacity-75 transition-opacity"
                         />
                       </div>
 
@@ -80,36 +82,23 @@
                             class="flex justify-between text-base font-medium text-gray-900"
                           >
                             <h3>
-                              <a href="#">{{ item.title }}</a>
+                              <a
+                                (click)="openQuickView(item)"
+                                class="cursor-pointer hover:underline"
+                              >
+                                {{ item.title }}
+                              </a>
                             </h3>
                             <p class="ml-4">{{ item.price | currency }}</p>
                           </div>
                           <p class="mt-1 text-sm text-gray-500">
-                            {{ item.color }} | Size {{ item.size }}
+                            {{ item.color }} | {{ item.size }}
                           </p>
                         </div>
-
                         <div
                           class="flex flex-1 items-end justify-between text-sm"
                         >
-                          <div
-                            class="flex items-center border border-gray-300 rounded"
-                          >
-                            <button
-                              class="px-2 py-1 hover:bg-gray-100 text-gray-600"
-                            >
-                              -
-                            </button>
-                            <span class="px-2 py-1 text-gray-900 font-medium">{{
-                              item.quantity
-                            }}</span>
-                            <button
-                              class="px-2 py-1 hover:bg-gray-100 text-gray-600"
-                            >
-                              +
-                            </button>
-                          </div>
-
+                          <p class="text-gray-500">Qty {{ item.quantity }}</p>
                           <div class="flex">
                             <button
                               type="button"
@@ -162,3 +151,10 @@
     </div>
   </div>
 </div>
+
+@if (selectedProductForView) {
+<app-product-quick-view
+  [product]="selectedProductForView"
+  (close)="closeQuickView()"
+></app-product-quick-view>
+}
