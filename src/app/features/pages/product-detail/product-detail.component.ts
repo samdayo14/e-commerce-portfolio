@@ -5,9 +5,10 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
-import * as ProductActions from '../../../shared/store/product.actions';
-import * as ProductSelectors from '../../../shared/store/product.selectors';
+import * as ProductActions from '../../../shared/store/product/product.actions';
+import * as ProductSelectors from '../../../shared/store/product/product.selectors';
 import { Product } from '../../../core/models/product.model';
+import * as CartActions from '../../../shared/store/cart/cart.actions';
 
 @Component({
   selector: 'app-product-detail',
@@ -40,6 +41,8 @@ export class ProductDetailComponent implements OnInit {
 
   addToCart(product: Product) {
     console.log('Added to Cart:', product.title);
+
+    this.store.dispatch(CartActions.addToCart({ product, quantity: 1 }));
   }
 
   getStars(rating: number): number[] {

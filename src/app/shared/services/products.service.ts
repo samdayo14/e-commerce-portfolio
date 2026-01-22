@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { Product, ProductResponse } from '../../core/models/product.model';
+import { AddToCartRequest } from '../../core/models/cart.model';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,7 @@ import { Product, ProductResponse } from '../../core/models/product.model';
 export class ProductService {
   private http = inject(HttpClient);
   private apiUrl = 'https://dummyjson.com/products';
+  private cartApiUrl = 'https://dummyjson.com/carts/add';
 
   getProducts(): Observable<Product[]> {
     return this.http
@@ -30,5 +32,9 @@ export class ProductService {
     return this.http
       .get<ProductResponse>(`${this.apiUrl}/search?q=${query}`)
       .pipe(map((response) => response.products));
+  }
+
+  addProductToCart(request: AddToCartRequest): Observable<any> {
+    return this.http.post<any>(this.cartApiUrl, request);
   }
 }

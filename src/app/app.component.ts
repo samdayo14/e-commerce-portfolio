@@ -16,7 +16,8 @@ import { LoadingOverlayComponent } from './shared/components/ui/spinner/loading-
 
 import { AuthService } from './features/auth/services/auth.service';
 import * as AuthSelectors from './features/auth/store/auth.selectors';
-import * as ProductSelectors from './shared/store/product.selectors';
+import * as ProductSelectors from './shared/store/product/product.selectors';
+import * as CartSelectors from './shared/store/cart/cart.selectors';
 
 @Component({
   selector: 'app-root',
@@ -48,6 +49,7 @@ export class AppComponent implements OnInit {
 
   user$ = this.store.select(AuthSelectors.selectCurrentUser);
   isLoggedIn$ = this.store.select(AuthSelectors.selectIsLoggedIn);
+  cartCount$ = this.store.select(CartSelectors.selectTotalQuantity);
 
   constructor(private router: Router, private authService: AuthService) {}
 

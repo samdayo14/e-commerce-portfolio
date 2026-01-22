@@ -5,8 +5,8 @@ import { Store } from '@ngrx/store';
 import { filter, map, switchMap } from 'rxjs/operators';
 
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
-import * as ProductActions from '../../shared/store/product.actions';
-import * as ProductSelectors from '../../shared/store/product.selectors';
+import * as ProductActions from '../../shared/store/product/product.actions';
+import * as ProductSelectors from '../../shared/store/product/product.selectors';
 
 @Component({
   selector: 'app-shop',

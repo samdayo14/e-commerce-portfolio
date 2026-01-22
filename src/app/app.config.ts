@@ -14,9 +14,11 @@ import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { authReducer } from './features/auth/store/auth.reducer';
 import { AuthEffects } from './features/auth/store/auth.effects';
-import { productReducer } from './shared/store/product.reducer';
-import { ProductEffects } from './shared/store/product.effects';
+import { productReducer } from './shared/store/product/product.reducer';
+import { ProductEffects } from './shared/store/product/product.effects';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import { cartReducer } from './shared/store/cart/cart.reducer';
+import { CartEffects } from './shared/store/cart/cart.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,7 +31,8 @@ export const appConfig: ApplicationConfig = {
     provideStore({
       auth: authReducer,
       shop: productReducer,
+      cart: cartReducer,
     }),
-    provideEffects([AuthEffects, ProductEffects]),
+    provideEffects([AuthEffects, ProductEffects, CartEffects]),
   ],
 };
