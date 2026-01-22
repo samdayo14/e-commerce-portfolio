@@ -1,9 +1,14 @@
 <div class="bg-white min-h-screen pt-24 pb-12">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
-    <h1 class="text-4xl font-bold tracking-tight text-slate-900 font-serif">
-      {{ categoryTitle }}
+    <h1
+      class="text-4xl font-bold tracking-tight text-slate-900 font-serif uppercase"
+    >
+      {{ pageTitle$ | async }}
     </h1>
-    <p class="mt-4 max-w-xl text-sm text-gray-500">{{ categoryDescription }}</p>
+    <p class="mt-4 max-w-xl text-sm text-gray-500">
+      Explore our latest collection of premium products, designed for comfort
+      and style.
+    </p>
   </div>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,54 +22,17 @@
               Category
             </h3>
             <div class="space-y-3">
-              @for (cat of filters.categories; track cat) {
+              @for(categories of (ProductCategories$ | async)?.slice(0,10);
+              track categories) {
               <div class="flex items-center">
-                <input
-                  [id]="cat"
-                  type="checkbox"
-                  class="h-4 w-4 rounded border-gray-300 text-slate-900 focus:ring-slate-900"
-                />
-                <label
-                  [for]="cat"
-                  class="ml-3 text-sm text-gray-600 hover:text-slate-900 cursor-pointer"
+                <a
+                  [routerLink]="['/shop', categories]"
+                  routerLinkActive="font-bold text-slate-900"
+                  class="text-sm text-gray-600 hover:text-slate-900 cursor-pointer block py-1"
                 >
-                  {{ cat }}
-                </label>
+                  {{ categories | titlecase }}
+                </a>
               </div>
-              }
-            </div>
-          </div>
-
-          <div class="pt-8">
-            <h3
-              class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4"
-            >
-              Size
-            </h3>
-            <div class="grid grid-cols-4 gap-2">
-              @for (size of filters.sizes; track size) {
-              <button
-                class="flex items-center justify-center rounded border border-gray-200 py-2 text-sm text-gray-900 hover:border-gray-900 hover:bg-gray-50 transition-colors"
-              >
-                {{ size }}
-              </button>
-              }
-            </div>
-          </div>
-
-          <div class="pt-8">
-            <h3
-              class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4"
-            >
-              Color
-            </h3>
-            <div class="flex flex-wrap gap-3">
-              @for (color of filters.colors; track color.name) {
-              <button
-                class="h-8 w-8 rounded-full border border-gray-200 relative focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
-                [title]="color.name"
-                [style.backgroundColor]="color.hex"
-              ></button>
               }
             </div>
           </div>
@@ -75,13 +43,16 @@
         <div
           class="flex items-center justify-between border-b border-gray-200 pb-6 mb-8"
         >
-          <p class="text-sm text-gray-500">{{ products.length }} items</p>
+          <p class="text-sm text-gray-500">
+            @if (filteredProducts$ | async; as products) {
+            {{ products.length }} items } @else { Loading... }
+          </p>
 
           <div class="flex items-center">
             <label for="sort" class="sr-only">Sort by</label>
             <select
               id="sort"
-              class="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-0 sm:text-sm sm:leading-6 focus:ring-0 cursor-pointer font-medium"
+              class="block w-full rounded-md border-gray-300 py-1.5 text-gray-900 text-sm focus:border-slate-900 focus:ring-slate-900 cursor-pointer"
             >
               <option>Featured</option>
               <option>Price: Low to High</option>
@@ -91,28 +62,40 @@
           </div>
         </div>
 
+        @if (isLoading$ | async) {
         <div
           class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8"
         >
-          @for (product of products; track product.id) {
+          @for (i of [1,2,3,4,5,6]; track i) {
+          <div class="h-[400px] bg-gray-100 animate-pulse rounded-md"></div>
+          }
+        </div>
+        } @else {
+        <div
+          class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8"
+        >
+          @for (product of filteredProducts$ | async; track product.id) {
           <app-product-card
             [id]="product.id"
             [title]="product.title"
             [price]="product.price"
             [category]="product.category"
-            [image]="product.image"
+            [image]="product.thumbnail"
           ></app-product-card>
           }
         </div>
 
-        @if (products.length === 0) {
+        @if ((filteredProducts$ | async)?.length === 0) {
         <div class="text-center py-20">
           <p class="text-gray-500">No products found matching your filters.</p>
-          <button class="mt-4 text-slate-900 underline font-bold">
+          <a
+            routerLink="/shop/all"
+            class="mt-4 inline-block text-slate-900 underline font-bold"
+          >
             Clear all filters
-          </button>
+          </a>
         </div>
-        }
+        } }
       </div>
     </div>
   </div>

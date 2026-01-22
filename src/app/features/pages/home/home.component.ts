@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ProductCardComponent } from '../../../shared/components/product-card/product-card.component';
-import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import * as ProductActions from '../../../shared/store/product.actions';
 import * as ProductSelectors from '../../../shared/store/product.selectors';
+import { map, tap } from 'rxjs'; // Import tap
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, ProductCardComponent, ButtonComponent, RouterLink],
+  imports: [CommonModule, ProductCardComponent, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -19,6 +19,14 @@ export class HomeComponent implements OnInit {
 
   products$ = this.store.select(ProductSelectors.selectAllProducts);
   isLoading$ = this.store.select(ProductSelectors.selectProductsLoading);
+
+  menFeature$ = this.products$.pipe(
+    map((products) => products.find((p) => p.category.includes('mens')))
+  );
+
+  womenFeature$ = this.products$.pipe(
+    map((products) => products.find((p) => p.category.includes('women')))
+  );
 
   ngOnInit() {
     this.store.dispatch(ProductActions.loadProducts({}));
