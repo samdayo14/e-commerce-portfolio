@@ -11,7 +11,18 @@ export interface Product {
   brand: string;
   sku: string;
   weight: number;
+
+  dimensions: {
+    width: number;
+    height: number;
+    depth: number;
+  };
+  warrantyInformation: string;
+  shippingInformation: string;
+  returnPolicy: string;
   availabilityStatus: string;
+  reviews: any[];
+
   thumbnail: string;
   images: string[];
 }

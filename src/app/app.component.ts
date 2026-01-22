@@ -5,15 +5,18 @@ import {
   Router,
   NavigationEnd,
 } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { combineLatest, map, filter, delay } from 'rxjs';
+
 import { FooterComponent } from './shared/components/layout/footer/footer.component';
-import { filter } from 'rxjs/operators';
-import * as AuthSelectors from './features/auth/store/auth.selectors';
 import { CartDrawerComponent } from './shared/components/cart-drawer/cart-drawer.component';
 import { ToastComponent } from './shared/components/ui/toast/toast.component';
-import { Store } from '@ngrx/store';
 import { LoadingOverlayComponent } from './shared/components/ui/spinner/loading-overlay.component';
-import { AsyncPipe } from '@angular/common';
+
 import { AuthService } from './features/auth/services/auth.service';
+import * as AuthSelectors from './features/auth/store/auth.selectors';
+import * as ProductSelectors from './shared/store/product.selectors';
 
 @Component({
   selector: 'app-root',
@@ -35,7 +38,14 @@ export class AppComponent implements OnInit {
   isCartOpen = false;
   private store = inject(Store);
 
-  isLoading$ = this.store.select(AuthSelectors.selectIsLoading);
+  isLoading$ = combineLatest([
+    this.store.select(AuthSelectors.selectIsLoading),
+    this.store.select(ProductSelectors.selectProductsLoading),
+  ]).pipe(
+    map(([authLoading, productLoading]) => authLoading || productLoading),
+    delay(0)
+  );
+
   user$ = this.store.select(AuthSelectors.selectCurrentUser);
   isLoggedIn$ = this.store.select(AuthSelectors.selectIsLoggedIn);
 

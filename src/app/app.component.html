@@ -1,5 +1,15 @@
-@if(showLayout){
+@if (isLoading$ | async) {
+<app-loading-overlay></app-loading-overlay>
+}
 
+<app-toast></app-toast>
+
+<app-cart-drawer
+  [isOpen]="isCartOpen"
+  (close)="isCartOpen = false"
+></app-cart-drawer>
+
+@if(showLayout){
 <nav class="fixed top-4 z-50 w-full">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div
@@ -32,17 +42,17 @@
 
       <div class="hidden md:flex space-x-8">
         <a
-          href="/shop/men"
+          routerLink="/shop/men"
           class="text-xs font-bold text-gray-900 hover:text-slate-600 uppercase tracking-widest transition-colors"
           >Men</a
         >
         <a
-          href="/shop/women"
+          routerLink="/shop/women"
           class="text-xs font-bold text-gray-900 hover:text-slate-600 uppercase tracking-widest transition-colors"
           >Women</a
         >
         <a
-          href="/shop/sale"
+          routerLink="/shop/sale"
           class="text-xs font-bold text-red-600 hover:text-red-700 uppercase tracking-widest transition-colors"
           >Sale</a
         >
@@ -56,7 +66,6 @@
           >
             Hi, {{ (user$ | async)?.displayName?.split(' ')?.[0] }}
           </span>
-
           <button
             (click)="logout()"
             class="text-xs font-bold text-gray-500 hover:text-red-600 uppercase tracking-widest transition-colors"
@@ -106,25 +115,18 @@
           </svg>
           <span
             class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-slate-900 text-[10px] font-bold text-white shadow-sm"
-            >0</span
           >
+            0
+          </span>
         </button>
       </div>
     </div>
   </div>
 </nav>
 }
-<app-cart-drawer
-  [isOpen]="isCartOpen"
-  (close)="isCartOpen = false"
-></app-cart-drawer>
 
-<app-toast></app-toast>
-@if (isLoading$ | async) {
-<app-loading-overlay></app-loading-overlay>
-}
 <router-outlet></router-outlet>
-@if(showLayout){
 
+@if(showLayout){
 <app-footer></app-footer>
 }
