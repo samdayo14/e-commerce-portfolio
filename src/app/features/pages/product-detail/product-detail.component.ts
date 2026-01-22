@@ -40,8 +40,6 @@ export class ProductDetailComponent implements OnInit {
   }
 
   addToCart(product: Product) {
-    console.log('Added to Cart:', product.title);
-
     this.store.dispatch(CartActions.addToCart({ product, quantity: 1 }));
   }
 
