@@ -24,15 +24,23 @@ export class ProductDetailComponent implements OnInit {
   product$: Observable<Product | null> = this.store.select(
     ProductSelectors.selectSelectedProduct
   );
+
+  relatedProducts$: Observable<Product[]> = this.store.select(
+    ProductSelectors.selectRelatedProducts
+  );
+
   isLoading$ = this.store.select(ProductSelectors.selectProductsLoading);
 
   activeImageIndex = 0;
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.store.dispatch(ProductActions.loadProduct({ id: +id }));
-    }
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (id) {
+        this.activeImageIndex = 0;
+        this.store.dispatch(ProductActions.loadProduct({ id: +id }));
+      }
+    });
   }
 
   setActiveImage(index: number) {

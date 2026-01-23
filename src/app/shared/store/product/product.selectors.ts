@@ -13,6 +13,16 @@ export const selectSelectedProduct = createSelector(
   (state) => state.selectedProduct
 );
 
+export const selectRelatedProducts = createSelector(
+  selectAllProducts,
+  selectSelectedProduct,
+  (products, currentProduct) => {
+    if (!currentProduct || !products) return [];
+
+    return products.filter((p) => p.id !== currentProduct.id).slice(0, 4);
+  }
+);
+
 export const selectProductsLoading = createSelector(
   selectProductState,
   (state) => state.loading

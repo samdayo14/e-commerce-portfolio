@@ -184,5 +184,39 @@
       </div>
     </div>
   </div>
-  }
+
+  @if (relatedProducts$ | async; as related) { @if (related.length > 0) {
+  <div class="bg-gray-50 py-16 border-t border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl font-bold font-serif text-slate-900 mb-8">
+        You Might Also Like
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        @for (item of related; track item.id) {
+        <a
+          [routerLink]="['/products', item.id]"
+          class="group block bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+        >
+          <div class="aspect-w-1 aspect-h-1 w-full bg-gray-100 overflow-hidden">
+            <img
+              [src]="item.thumbnail"
+              [alt]="item.title"
+              class="w-full h-full object-cover object-center group-hover:opacity-75 transition-opacity"
+            />
+          </div>
+          <div class="p-4">
+            <h3 class="text-sm font-medium text-gray-900 truncate">
+              {{ item.title }}
+            </h3>
+            <p class="mt-1 text-sm text-gray-500">
+              {{ item.price | currency }}
+            </p>
+          </div>
+        </a>
+        }
+      </div>
+    </div>
+  </div>
+  } } }
 </div>
