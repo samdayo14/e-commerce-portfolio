@@ -63,6 +63,35 @@
 
               <div class="mt-8">
                 <div class="flow-root">
+                  @if ((isCartEmpty$ | async)) {
+                  <div
+                    class="flex flex-col items-center justify-center py-12 text-center"
+                  >
+                    <div
+                      class="h-24 w-24 bg-gray-50 rounded-full flex items-center justify-center mb-4"
+                    >
+                      <svg
+                        class="w-10 h-10 text-gray-300"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                        />
+                      </svg>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900">
+                      Your cart is empty
+                    </h3>
+                    <p class="mt-1 text-sm text-gray-500 mb-6">
+                      Looks like you haven't added anything yet.
+                    </p>
+                  </div>
+                  } @else {
                   <ul role="list" class="-my-6 divide-y divide-gray-200">
                     @for (item of (cartItems$ | async); track item.id) {
                     <li class="flex py-6">
@@ -90,36 +119,70 @@
                                 {{ item.title }}
                               </a>
                             </h3>
-                            <p class="ml-4">{{ item.price | currency }}</p>
+                            <p class="ml-4">{{ item.total | currency }}</p>
                           </div>
                           <p class="mt-1 text-sm text-gray-500">
-                            Qty: {{ item.quantity }}
+                            {{ item.price | currency }} each
                           </p>
                         </div>
+
                         <div
                           class="flex flex-1 items-end justify-between text-sm"
                         >
-                          <p class="text-gray-500">
-                            Total: {{ item.total | currency }}
-                          </p>
+                          <div
+                            class="flex items-center border border-gray-300 rounded-md"
+                          >
+                            <button
+                              (click)="decrement(item.id)"
+                              [disabled]="item.quantity <= 1"
+                              class="px-3 py-1 text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed"
+                            >
+                              −
+                            </button>
+                            <span
+                              class="px-2 font-medium text-gray-900 min-w-[1.5rem] text-center"
+                            >
+                              {{ item.quantity }}
+                            </span>
+                            <button
+                              (click)="increment(item.id)"
+                              class="px-3 py-1 text-gray-600 hover:bg-gray-100"
+                            >
+                              +
+                            </button>
+                          </div>
+
                           <div class="flex">
                             <button
-                              (click)="removeItem(item.id)"
+                              (click)="delete(item.id)"
                               type="button"
-                              class="font-medium text-red-600 hover:text-red-500"
+                              class="font-medium text-red-600 hover:text-red-500 flex items-center gap-1 group"
                             >
-                              Remove
+                              <span
+                                class="hidden sm:inline group-hover:underline"
+                                >Remove</span
+                              >
+                              <svg
+                                class="w-4 h-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                />
+                              </svg>
                             </button>
                           </div>
                         </div>
                       </div>
                     </li>
-                    } @if ((cartItems$ | async)?.length === 0) {
-                    <div class="py-12 text-center text-gray-500">
-                      Your cart is empty.
-                    </div>
                     }
                   </ul>
+                  }
                 </div>
               </div>
             </div>
@@ -138,7 +201,10 @@
                 <app-button
                   [fullWidth]="true"
                   (click)="handleCheckout()"
-                  [disabled]="(isCartEmpty$ | async) ?? false"
+                  [loading]="isCheckingOut"
+                  [disabled]="
+                    ((isCartEmpty$ | async) ?? false) || isCheckingOut
+                  "
                 >
                   Checkout
                 </app-button>

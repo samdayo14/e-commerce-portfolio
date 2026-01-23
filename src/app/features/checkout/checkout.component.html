@@ -177,17 +177,22 @@
                 label="Card Number"
                 placeholder="0000 0000 0000 0000"
                 [control]="f.cardNumber"
+                maxlength="19"
               ></app-input>
+
               <div class="grid grid-cols-2 gap-x-4">
                 <app-input
                   label="Expiration (MM/YY)"
-                  placeholder="12/26"
+                  placeholder="MM/YY"
                   [control]="f.expiry"
+                  maxlength="5"
                 ></app-input>
+
                 <app-input
                   label="CVC"
                   placeholder="123"
                   [control]="f.cvc"
+                  maxlength="3"
                 ></app-input>
               </div>
             </div>

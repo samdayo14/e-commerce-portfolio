@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormControl,
@@ -31,7 +31,7 @@ import { OrderService } from '../../shared/services/order.service';
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss',
 })
-export class CheckoutComponent {
+export class CheckoutComponent implements OnInit {
   private store = inject(Store);
   private router = inject(Router);
   private orderService = inject(OrderService);
@@ -56,20 +56,84 @@ export class CheckoutComponent {
     city: new FormControl('', [Validators.required]),
     state: new FormControl('', [Validators.required]),
     zip: new FormControl('', [Validators.required]),
+
     cardNumber: new FormControl('', [
       Validators.required,
-      Validators.minLength(16),
+      Validators.pattern(/^\d{4} \d{4} \d{4} \d{4}$/),
     ]),
-    expiry: new FormControl('', [Validators.required]),
-    cvc: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    expiry: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/),
+    ]),
+    cvc: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^\d{3,4}$/),
+    ]),
   });
 
   get f() {
     return this.checkoutForm.controls;
   }
 
+  ngOnInit() {
+    this.setupCardFormatting();
+  }
+
+  private setupCardFormatting() {
+    this.f.cardNumber.valueChanges.subscribe((value) => {
+      if (!value) return;
+
+      let cleanVal = value.replace(/\D/g, '');
+
+      if (cleanVal.length > 16) {
+        cleanVal = cleanVal.substring(0, 16);
+      }
+
+      const formatted = cleanVal.match(/.{1,4}/g)?.join(' ') || cleanVal;
+
+      if (value !== formatted) {
+        this.f.cardNumber.setValue(formatted, { emitEvent: false });
+      }
+    });
+
+    this.f.expiry.valueChanges.subscribe((value) => {
+      if (!value) return;
+
+      let cleanVal = value.replace(/\D/g, '');
+
+      if (cleanVal.length > 4) {
+        cleanVal = cleanVal.substring(0, 4);
+      }
+
+      let formatted = cleanVal;
+      if (cleanVal.length >= 2) {
+        formatted = cleanVal.substring(0, 2) + '/' + cleanVal.substring(2);
+      }
+
+      if (value !== formatted) {
+        this.f.expiry.setValue(formatted, { emitEvent: false });
+      }
+    });
+
+    this.f.cvc.valueChanges.subscribe((value) => {
+      if (!value) return;
+
+      let cleanVal = value.replace(/\D/g, '');
+      if (cleanVal.length > 3) {
+        cleanVal = cleanVal.substring(0, 3);
+      }
+
+      if (value !== cleanVal) {
+        this.f.cvc.setValue(cleanVal, { emitEvent: false });
+      }
+    });
+  }
+
   onSubmit() {
-    if (this.checkoutForm.invalid || this.isProcessing) return;
+    if (this.checkoutForm.invalid || this.isProcessing) {
+      this.checkoutForm.markAllAsTouched();
+      return;
+    }
 
     this.isProcessing = true;
 
@@ -94,14 +158,12 @@ export class CheckoutComponent {
           };
 
           const userId = user ? (user as any).uid || user.id : 'guest_users';
-
           return this.orderService.createOrder(userId, orderData);
         })
       )
       .subscribe({
         next: (res: any) => {
           this.store.dispatch(CartActions.clearCart());
-
           this.router.navigate(['/order-success'], {
             state: {
               orderId: res.id,

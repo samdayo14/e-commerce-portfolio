@@ -12,6 +12,26 @@ export const initialCartState: CartState = {
   error: null,
 };
 
+function calculateTotals(
+  state: CartState,
+  updatedItems: CartItem[]
+): CartState {
+  const newTotal = updatedItems.reduce((acc, item) => acc + item.total, 0);
+  const newTotalQuantity = updatedItems.reduce(
+    (acc, item) => acc + item.quantity,
+    0
+  );
+
+  return {
+    ...state,
+    items: updatedItems,
+    total: newTotal,
+    totalQuantity: newTotalQuantity,
+    totalProducts: updatedItems.length,
+    loading: false,
+  };
+}
+
 export const cartReducer = createReducer(
   initialCartState,
 
@@ -44,23 +64,13 @@ export const cartReducer = createReducer(
       updatedItems = [...state.items, newItem];
     }
 
-    const newTotal = updatedItems.reduce((acc, item) => acc + item.total, 0);
-    const newTotalQuantity = updatedItems.reduce(
-      (acc, item) => acc + item.quantity,
-      0
-    );
-
     return {
-      ...state,
-      items: updatedItems,
-      total: newTotal,
-      totalQuantity: newTotalQuantity,
-      totalProducts: updatedItems.length,
+      ...calculateTotals(state, updatedItems),
       loading: true,
     };
   }),
 
-  on(CartActions.addToCartSuccess, (state, { cart }) => ({
+  on(CartActions.addToCartSuccess, (state) => ({
     ...state,
     loading: false,
   })),
@@ -75,32 +85,37 @@ export const cartReducer = createReducer(
     const existingItem = state.items.find((i) => i.id === id);
     if (!existingItem) return state;
 
-    let updatedItems: CartItem[];
-    if (existingItem.quantity > 1) {
-      updatedItems = state.items.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: item.quantity - 1,
-              total: item.price * (item.quantity - 1),
-            }
-          : item
-      );
-    } else {
-      updatedItems = state.items.filter((item) => item.id !== id);
-    }
-    const newTotal = updatedItems.reduce((acc, item) => acc + item.total, 0);
-    const newTotalQuantity = updatedItems.reduce(
-      (acc, item) => acc + item.quantity,
-      0
+    if (existingItem.quantity <= 1) return state;
+
+    const updatedItems = state.items.map((item) =>
+      item.id === id
+        ? {
+            ...item,
+            quantity: item.quantity - 1,
+            total: item.price * (item.quantity - 1),
+          }
+        : item
     );
-    return {
-      ...state,
-      items: updatedItems,
-      total: newTotal,
-      totalQuantity: newTotalQuantity,
-      totalProducts: updatedItems.length,
-    };
+
+    return calculateTotals(state, updatedItems);
+  }),
+
+  on(CartActions.incrementItem, (state, { id }) => {
+    const updatedItems = state.items.map((item) =>
+      item.id === id
+        ? {
+            ...item,
+            quantity: item.quantity + 1,
+            total: item.price * (item.quantity + 1),
+          }
+        : item
+    );
+    return calculateTotals(state, updatedItems);
+  }),
+
+  on(CartActions.deleteItem, (state, { id }) => {
+    const updatedItems = state.items.filter((item) => item.id !== id);
+    return calculateTotals(state, updatedItems);
   }),
 
   on(CartActions.clearCart, (state) => ({
