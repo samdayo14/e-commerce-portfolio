@@ -101,5 +101,14 @@ export const cartReducer = createReducer(
       totalQuantity: newTotalQuantity,
       totalProducts: updatedItems.length,
     };
-  })
+  }),
+
+  on(CartActions.clearCart, (state) => ({
+    ...state,
+    items: [],
+    total: 0,
+    discountedTotal: 0,
+    totalProducts: 0,
+    totalQuantity: 0,
+  }))
 );

@@ -9,6 +9,7 @@ import {
   ProductQuickViewComponent,
   QuickViewData,
 } from '../modals/product-quick-view/product-quick-view.component';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-cart-drawer',
@@ -19,6 +20,7 @@ import {
 })
 export class CartDrawerComponent {
   private store = inject(Store);
+  private router = inject(Router);
 
   @Input() isOpen = false;
   @Output() close = new EventEmitter<void>();
@@ -36,7 +38,12 @@ export class CartDrawerComponent {
     this.selectedProductForView = null;
   }
 
-  removeItem(id: number) {
+  protected removeItem(id: number) {
     this.store.dispatch(CartActions.removeCart({ id }));
+  }
+
+  protected handleCheckout() {
+    this.close.emit();
+    this.router.navigate(['/checkout']);
   }
 }
