@@ -69,5 +69,37 @@ export const cartReducer = createReducer(
     ...state,
     loading: false,
     error: error,
-  }))
+  })),
+
+  on(CartActions.removeCart, (state, { id }) => {
+    const existingItem = state.items.find((i) => i.id === id);
+    if (!existingItem) return state;
+
+    let updatedItems: CartItem[];
+    if (existingItem.quantity > 1) {
+      updatedItems = state.items.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              quantity: item.quantity - 1,
+              total: item.price * (item.quantity - 1),
+            }
+          : item
+      );
+    } else {
+      updatedItems = state.items.filter((item) => item.id !== id);
+    }
+    const newTotal = updatedItems.reduce((acc, item) => acc + item.total, 0);
+    const newTotalQuantity = updatedItems.reduce(
+      (acc, item) => acc + item.quantity,
+      0
+    );
+    return {
+      ...state,
+      items: updatedItems,
+      total: newTotal,
+      totalQuantity: newTotalQuantity,
+      totalProducts: updatedItems.length,
+    };
+  })
 );
