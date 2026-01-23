@@ -10,6 +10,7 @@ import {
   QuickViewData,
 } from '../modals/product-quick-view/product-quick-view.component';
 import { Router, RouterLink } from '@angular/router';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-cart-drawer',
@@ -29,6 +30,8 @@ export class CartDrawerComponent {
 
   cartItems$ = this.store.select(CartSelectors.selectCartItems);
   subtotal$ = this.store.select(CartSelectors.selectCartTotal);
+
+  isCartEmpty$ = this.cartItems$.pipe(map((items) => items.length === 0));
 
   openQuickView(item: any) {
     this.selectedProductForView = item;

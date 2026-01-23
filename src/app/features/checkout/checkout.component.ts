@@ -99,17 +99,19 @@ export class CheckoutComponent {
         })
       )
       .subscribe({
-        next: () => {
-          console.log('Order Placed Successfully!');
+        next: (res: any) => {
           this.store.dispatch(CartActions.clearCart());
 
-          this.router.navigate(['/order-success']);
+          this.router.navigate(['/order-success'], {
+            state: {
+              orderId: res.id,
+              email: this.checkoutForm.value.email,
+            },
+          });
           this.isProcessing = false;
         },
         error: (err) => {
-          console.error('Order Failed', err);
           this.isProcessing = false;
-          alert('Something went wrong. Please try again.');
         },
       });
   }
