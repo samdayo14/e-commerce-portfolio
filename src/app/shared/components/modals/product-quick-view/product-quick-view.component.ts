@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../ui/button/button.component';
+
 export interface QuickViewData {
   id: number;
   title: string;
@@ -20,12 +21,12 @@ export interface QuickViewData {
   imports: [CommonModule, ButtonComponent, RouterLink],
   template: `
     <div
-      class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity z-[500]"
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity z-[1000]"
       (click)="close.emit()"
     ></div>
 
     <div
-      class="fixed inset-0 z-[510] flex items-center justify-center p-4 sm:p-6 pointer-events-none"
+      class="fixed inset-0 z-[1010] flex items-center justify-center p-4 sm:p-6 pointer-events-none"
     >
       <div
         class="pointer-events-auto w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh] animate-slide-up"
@@ -53,11 +54,32 @@ export interface QuickViewData {
             </svg>
           </button>
 
+          @if (product?.image) {
           <img
             [src]="product?.image"
             [alt]="product?.title"
             class="w-full max-h-[300px] md:max-h-[400px] object-contain mix-blend-multiply transition-transform duration-500 hover:scale-105"
+            (error)="handleImageError($event)"
           />
+          } @else {
+          <div class="flex flex-col items-center justify-center text-gray-400">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-16 h-16 mb-2 opacity-50"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+              />
+            </svg>
+            <span class="text-sm font-medium">No Image Available</span>
+          </div>
+          }
         </div>
 
         <div class="w-full md:w-1/2 p-6 md:p-10 flex flex-col overflow-y-auto">
@@ -174,5 +196,12 @@ export class ProductQuickViewComponent {
     return Array(5)
       .fill(0)
       .map((_, i) => (i < Math.round(rating) ? 1 : 0));
+  }
+
+  // Fallback if the URL exists but returns 404
+  handleImageError(event: any) {
+    event.target.style.display = 'none';
+    // You could also set a default placeholder here:
+    // event.target.src = 'assets/images/placeholder.png';
   }
 }
