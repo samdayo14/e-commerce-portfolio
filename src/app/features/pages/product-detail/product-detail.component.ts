@@ -32,6 +32,7 @@ export class ProductDetailComponent implements OnInit {
   isLoading$ = this.store.select(ProductSelectors.selectProductsLoading);
 
   activeImageIndex = 0;
+  isLightboxOpen = false;
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
@@ -55,5 +56,25 @@ export class ProductDetailComponent implements OnInit {
     return Array(5)
       .fill(0)
       .map((_, i) => (i < Math.round(rating) ? 1 : 0));
+  }
+
+  openLightbox(index: number) {
+    this.activeImageIndex = index;
+    this.isLightboxOpen = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeLightbox() {
+    this.isLightboxOpen = false;
+    document.body.style.overflow = 'auto';
+  }
+
+  nextImage(images: string[]) {
+    this.activeImageIndex = (this.activeImageIndex + 1) % images.length;
+  }
+
+  prevImage(images: string[]) {
+    this.activeImageIndex =
+      (this.activeImageIndex - 1 + images.length) % images.length;
   }
 }

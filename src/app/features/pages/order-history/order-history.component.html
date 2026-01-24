@@ -15,7 +15,7 @@
           <div
             class="flex items-center justify-between p-6 border-b border-gray-100 bg-gray-50/50"
           >
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-8">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 w-full">
               <div>
                 <p
                   class="text-xs font-bold text-gray-500 uppercase tracking-wider"
@@ -64,9 +64,10 @@
           <div class="p-6">
             <ul class="divide-y divide-gray-100">
               @for (item of order.items; track item.id) {
-              <li class="flex py-4 first:pt-0 last:pb-0">
+              <li class="flex py-4 first:pt-0 last:pb-0 group">
                 <div
-                  class="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
+                  class="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 cursor-pointer hover:opacity-80 transition-opacity"
+                  (click)="openQuickView(item)"
                 >
                   <img
                     [src]="item.thumbnail"
@@ -74,21 +75,33 @@
                     class="h-full w-full object-cover object-center"
                   />
                 </div>
+
                 <div class="ml-4 flex flex-1 flex-col">
                   <div>
                     <div
                       class="flex justify-between text-base font-medium text-gray-900"
                     >
                       <h3>
-                        <a [routerLink]="['/products', item.id]">{{
-                          item.title
-                        }}</a>
+                        <button
+                          (click)="openQuickView(item)"
+                          class="hover:text-slate-600 hover:underline text-left transition-colors font-medium text-gray-900"
+                        >
+                          {{ item.title }}
+                        </button>
                       </h3>
                       <p class="ml-4">{{ item.price | currency }}</p>
                     </div>
                   </div>
+
                   <div class="flex flex-1 items-end justify-between text-sm">
                     <p class="text-gray-500">Qty {{ item.quantity }}</p>
+
+                    <button
+                      (click)="openQuickView(item)"
+                      class="text-slate-600 hover:text-slate-900 font-bold text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      View Details
+                    </button>
                   </div>
                 </div>
               </li>
@@ -127,3 +140,10 @@
     </div>
   </div>
 </div>
+
+@if (selectedProductForView) {
+<app-product-quick-view
+  [product]="selectedProductForView"
+  (close)="closeQuickView()"
+></app-product-quick-view>
+}
