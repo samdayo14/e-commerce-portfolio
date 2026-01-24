@@ -1,10 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import {
-  RouterOutlet,
-  RouterLink,
-  Router,
-  NavigationEnd,
-} from '@angular/router';
+import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, filter, delay } from 'rxjs';
@@ -24,7 +19,6 @@ import * as CartSelectors from './shared/store/cart/cart.selectors';
   standalone: true,
   imports: [
     RouterOutlet,
-    RouterLink,
     FooterComponent,
     CartDrawerComponent,
     ToastComponent,
@@ -61,14 +55,12 @@ export class AppComponent implements OnInit {
           '/login',
           '/register',
           '/forgot-password',
-          'checkout',
+          '/checkout',
           '/order-success',
         ];
-
         const isAuthPage = hiddenRoutes.some((route) =>
           event.urlAfterRedirects.includes(route)
         );
-
         this.showLayout = !isAuthPage;
       });
   }

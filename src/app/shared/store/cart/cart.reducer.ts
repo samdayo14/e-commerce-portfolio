@@ -2,15 +2,33 @@ import { createReducer, on } from '@ngrx/store';
 import * as CartActions from './cart.actions';
 import { CartState, CartItem } from '../../../core/models/cart.model';
 
-export const initialCartState: CartState = {
-  items: [],
-  total: 0,
-  discountedTotal: 0,
-  totalProducts: 0,
-  totalQuantity: 0,
-  loading: false,
-  error: null,
-};
+const CART_STORAGE_KEY = 'luxe_cart_state';
+
+function loadInitialState(): CartState {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    const saved = localStorage.getItem(CART_STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return { ...parsed, loading: false, error: null };
+      } catch (e) {
+        console.error('Failed to load cart from storage', e);
+      }
+    }
+  }
+
+  return {
+    items: [],
+    total: 0,
+    discountedTotal: 0,
+    totalProducts: 0,
+    totalQuantity: 0,
+    loading: false,
+    error: null,
+  };
+}
+
+export const initialCartState: CartState = loadInitialState();
 
 function calculateTotals(
   state: CartState,
@@ -66,18 +84,13 @@ export const cartReducer = createReducer(
 
     return {
       ...calculateTotals(state, updatedItems),
-      loading: true,
     };
   }),
 
-  on(CartActions.addToCartSuccess, (state) => ({
-    ...state,
-    loading: false,
-  })),
+  on(CartActions.addToCartSuccess, (state) => state),
 
   on(CartActions.addToCartFailure, (state, { error }) => ({
     ...state,
-    loading: false,
     error: error,
   })),
 
