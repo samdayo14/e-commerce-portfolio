@@ -8,6 +8,7 @@ import { CheckoutComponent } from './features/checkout/checkout.component';
 import { OrderSuccessComponent } from './features/checkout/order-success/order-success.component';
 import { ForgotPasswordComponent } from './features/auth/pages/forgot-password/forgot-password.component';
 import { authGuard } from './core/guards/auth.guards';
+import { OrderHistoryComponent } from './features/pages/order-history/order-history.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -16,6 +17,7 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'products/:id', component: ProductDetailComponent },
   { path: 'shop/:category', component: ShopComponent },
+  { path: 'orders', component: OrderHistoryComponent },
 
   {
     path: 'checkout',

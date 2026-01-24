@@ -1,24 +1,25 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
+import { RouterOutlet, NavigationEnd, Router } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, filter, delay } from 'rxjs';
 
+// Import your new Header Component
+import { HeaderComponent } from './shared/components/layout/header/header.component';
 import { FooterComponent } from './shared/components/layout/footer/footer.component';
 import { CartDrawerComponent } from './shared/components/cart-drawer/cart-drawer.component';
 import { ToastComponent } from './shared/components/ui/toast/toast.component';
 import { LoadingOverlayComponent } from './shared/components/ui/spinner/loading-overlay.component';
 
-import { AuthService } from './features/auth/services/auth.service';
 import * as AuthSelectors from './features/auth/store/auth.selectors';
 import * as ProductSelectors from './shared/store/product/product.selectors';
-import * as CartSelectors from './shared/store/cart/cart.selectors';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet,
+    HeaderComponent,
     FooterComponent,
     CartDrawerComponent,
     ToastComponent,
@@ -32,6 +33,7 @@ export class AppComponent implements OnInit {
   showLayout = true;
   isCartOpen = false;
   private store = inject(Store);
+  private router = inject(Router);
 
   isLoading$ = combineLatest([
     this.store.select(AuthSelectors.selectIsLoading),
@@ -40,12 +42,6 @@ export class AppComponent implements OnInit {
     map(([authLoading, productLoading]) => authLoading || productLoading),
     delay(0)
   );
-
-  user$ = this.store.select(AuthSelectors.selectCurrentUser);
-  isLoggedIn$ = this.store.select(AuthSelectors.selectIsLoggedIn);
-  cartCount$ = this.store.select(CartSelectors.selectTotalQuantity);
-
-  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
     this.router.events
@@ -58,15 +54,9 @@ export class AppComponent implements OnInit {
           '/checkout',
           '/order-success',
         ];
-        const isAuthPage = hiddenRoutes.some((route) =>
+        this.showLayout = !hiddenRoutes.some((route) =>
           event.urlAfterRedirects.includes(route)
         );
-        this.showLayout = !isAuthPage;
       });
-  }
-
-  logout() {
-    this.authService.signOut();
-    this.router.navigate(['/login']);
   }
 }
